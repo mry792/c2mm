@@ -15,8 +15,12 @@ class C2MockRecipe (ConanFile):
     url = 'https://github.com/mry792/c2mock.git'
     description = 'Mocking library built with and for Catch2.'
 
-    settings = 'compiler', 'build_type'
-    generators = 'virtualenv', 'CMakeToolchain'
+    settings = 'os', 'compiler', 'build_type', 'arch',
+    generators = (
+        'virtualenv',
+        'CMakeDeps',
+        'CMakeToolchain',
+    )
 
     def package_id (self):
         self.info.clear()
@@ -25,6 +29,8 @@ class C2MockRecipe (ConanFile):
         git = LegacyGit(self.recipe_folder)
         tag = git.run('describe --tags')
         self.version = tag[1:]
+
+    requires = 'catch2/3.1.0'
 
     def export (self):
         git = Git(self, self.recipe_folder)
