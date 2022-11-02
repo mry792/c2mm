@@ -1,14 +1,14 @@
-#ifndef C2MOCK__MOCK_FUNCTION_HPP_
-#define C2MOCK__MOCK_FUNCTION_HPP_
+#ifndef C2MOCK__MOCK__MOCK_FUNCTION_HPP_
+#define C2MOCK__MOCK__MOCK_FUNCTION_HPP_
 
 #include <utility>
 #include <type_traits>
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "c2mock/Call_Log.hpp"
-#include "c2mock/args.hpp"
 #include "c2mock/matchers/Tuple_Matcher.hpp"
+#include "c2mock/mock/Call_Log.hpp"
+#include "c2mock/mock/args.hpp"
 
 namespace c2mock {
 /**
@@ -145,4 +145,4 @@ class Mock_Function<T_Return(T_Parameters...)> {
 };
 }  // namespace c2mock
 
-#endif  // C2MOCK__MOCK_FUNCTION_HPP_
+#endif  // C2MOCK__MOCK__MOCK_FUNCTION_HPP_

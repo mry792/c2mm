@@ -1,4 +1,4 @@
-#include "c2mock/args.hpp"
+#include "c2mock/mock/args.hpp"
 
 #include <tuple>
 #include <type_traits>
