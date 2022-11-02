@@ -1,8 +1,8 @@
-#include "c2mock/matchers/utils.hpp"
+#include "c2mm/matchers/utils.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "c2mock/matchers/Comparison_Matcher.hpp"
+#include "c2mm/matchers/Comparison_Matcher.hpp"
 
 TEST_CASE ("utils::is_matcher") {
     using c2mock::matchers::equal_to;

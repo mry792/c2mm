@@ -1,4 +1,4 @@
-#include "c2mock/matchers/Comparison_Matcher.hpp"
+#include "c2mm/matchers/Comparison_Matcher.hpp"
 
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>

@@ -1,11 +1,11 @@
-#include "c2mock/mock/Mock_Function.hpp"
+#include "c2mm/mock/Mock_Function.hpp"
 
 #include <optional>
 #include <tuple>
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "c2mock/matchers/Comparison_Matcher.hpp"
+#include "c2mm/matchers/Comparison_Matcher.hpp"
 
 SCENARIO ("If all calls are consumed, Mock_Function doesn't fail.") {
     GIVEN ("a Mock_Function") {

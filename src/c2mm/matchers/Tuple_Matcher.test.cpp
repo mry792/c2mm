@@ -1,8 +1,8 @@
-#include "c2mock/matchers/Tuple_Matcher.hpp"
+#include "c2mm/matchers/Tuple_Matcher.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "c2mock/matchers/Comparison_Matcher.hpp"
+#include "c2mm/matchers/Comparison_Matcher.hpp"
 
 TEST_CASE ("c2mock::matchers::Tuple_Matcher") {
     using c2mock::matchers::less_than;

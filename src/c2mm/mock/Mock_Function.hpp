@@ -6,9 +6,9 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "c2mock/matchers/Tuple_Matcher.hpp"
-#include "c2mock/mock/Call_Log.hpp"
-#include "c2mock/mock/args.hpp"
+#include "c2mm/matchers/Tuple_Matcher.hpp"
+#include "c2mm/mock/Call_Log.hpp"
+#include "c2mm/mock/args.hpp"
 
 namespace c2mock::mock {
 /**

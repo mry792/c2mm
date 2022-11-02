@@ -7,9 +7,9 @@
 
 #include <catch2/matchers/catch_matchers_templated.hpp>
 
-#include "c2mock/matchers/utils.hpp"
-#include "c2mock/mp/all.hpp"
-#include "c2mock/mp/zip_with.hpp"
+#include "c2mm/matchers/utils.hpp"
+#include "c2mm/mp/all.hpp"
+#include "c2mm/mp/zip_with.hpp"
 
 namespace c2mock::matchers {
 /**
