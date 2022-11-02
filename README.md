@@ -1,2 +1,4 @@
-# c2mock
-Mocking framework built for Catch2.
+# c2mm
+
+Extension library for Catch2 providing a rich collection of matchers and
+macro-free mock functions.
