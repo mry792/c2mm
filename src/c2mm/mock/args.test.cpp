@@ -1,4 +1,4 @@
-#include "c2mock/mock/args.hpp"
+#include "c2mm/mock/args.hpp"
 
 #include <tuple>
 #include <type_traits>
@@ -12,7 +12,7 @@ SCENARIO ("Arguments can be captured and bound", "[unit]") {
         short i = -4;
 
         WHEN ("capturing the arguments") {
-            auto args = c2mock::mock::capture_args(7, d, std::move(i));
+            auto args = c2mm::mock::capture_args(7, d, std::move(i));
 
             THEN ("the values are captured") {
                 STATIC_CHECK((std::is_same_v<
@@ -25,7 +25,7 @@ SCENARIO ("Arguments can be captured and bound", "[unit]") {
         }
 
         WHEN ("binding the arguments") {
-            auto args = c2mock::mock::bind_args(d, std::move(i));
+            auto args = c2mm::mock::bind_args(d, std::move(i));
 
             THEN ("the values are bound") {
                 STATIC_CHECK((std::is_same_v<

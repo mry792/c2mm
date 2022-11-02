@@ -1,4 +1,4 @@
-#include "c2mock/mp/zip_with.hpp"
+#include "c2mm/mp/zip_with.hpp"
 
 #include <functional>
 #include <tuple>
@@ -7,8 +7,8 @@
 
 // TODO(emery): Add test using a mock function.
 
-TEST_CASE ("c2mock::mp::zip_with") {
-    using c2mock::mp::zip_with;
+TEST_CASE ("c2mm::mp::zip_with") {
+    using c2mm::mp::zip_with;
     std::less<> comp{};
 
     CHECK(zip_with(comp, std::tuple{1, 2.3}, std::tuple{1.2, 3}) == std::tuple{true, true});

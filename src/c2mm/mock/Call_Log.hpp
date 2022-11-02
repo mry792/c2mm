@@ -7,7 +7,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-namespace c2mock::mock {
+namespace c2mm::mock {
 /**
  * Represents a log of calls to some function.
  *
@@ -77,6 +77,6 @@ class Call_Log {
   private:
     Call_List calls_;
 };
-}  // namespace c2mock::mock
+}  // namespace c2mm::mock
 
 #endif  // C2MOCK__MOCK__CALL_LOG_HPP_

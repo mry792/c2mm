@@ -5,7 +5,7 @@
 #include <tuple>
 #include <utility>
 
-namespace c2mock::mp {
+namespace c2mm::mp {
 namespace impl_ {
 template <
     std::size_t t_idx,
@@ -62,6 +62,6 @@ constexpr auto zip_with (
         first_set, arg_sets...
     );
 }
-}  // namespace c2mock::mp
+}  // namespace c2mm::mp
 
 #endif  // C2MOCK__MP__ZIP_WITH_HPP_

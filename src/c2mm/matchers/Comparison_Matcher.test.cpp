@@ -1,4 +1,4 @@
-#include "c2mock/matchers/Comparison_Matcher.hpp"
+#include "c2mm/matchers/Comparison_Matcher.hpp"
 
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -6,8 +6,8 @@
 
 // TODO(emery): Test class Comparison_Matcher with a mock function.
 
-TEST_CASE ("class c2mock::matchers::Comparison_Matcher - less_than(int)") {
-    auto const matcher = c2mock::matchers::less_or_equal_to(7);
+TEST_CASE ("class c2mm::matchers::Comparison_Matcher - less_than(int)") {
+    auto const matcher = c2mm::matchers::less_or_equal_to(7);
 
     SECTION (".describe()") {
         CHECK(matcher.describe() == "<= 7");

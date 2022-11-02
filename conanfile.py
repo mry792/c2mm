@@ -8,11 +8,11 @@ from conans.tools import Git as LegacyGit
 
 
 class C2MockRecipe (ConanFile):
-    name = 'c2mock'
+    name = 'c2mm'
     # version = (computed from local repo)
 
     author = 'M. Emery Goss <m.goss792@gmail.com>'
-    url = 'https://github.com/mry792/c2mock.git'
+    url = 'https://github.com/mry792/c2mm.git'
     description = 'Mocking library built with and for Catch2.'
 
     settings = 'os', 'compiler', 'build_type', 'arch',

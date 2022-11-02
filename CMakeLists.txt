@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
-project(c2mock VERSION 0.0.1 LANGUAGES CXX)
+project(c2mm VERSION 0.0.1 LANGUAGES CXX)
 
 add_subdirectory(src)
 
