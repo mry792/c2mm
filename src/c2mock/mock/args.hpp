@@ -1,5 +1,5 @@
-#ifndef C2MOCK__ARGS_HPP_
-#define C2MOCK__ARGS_HPP_
+#ifndef C2MOCK__MOCK__ARGS_HPP_
+#define C2MOCK__MOCK__ARGS_HPP_
 
 #include <tuple>
 #include <type_traits>
@@ -47,4 +47,4 @@ Bound_Args<T_Args...> bind_args (T_Args&&... args) {
 }
 }  // namespace c2mock
 
-#endif  // C2MOCK__ARGS_HPP_
+#endif  // C2MOCK__MOCK__ARGS_HPP_
