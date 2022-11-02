@@ -10,7 +10,7 @@ SCENARIO (
     "If all calls are consumed, Call_Log::check_no_calls() doesn't fail."
 ) {
     GIVEN ("a Call_Log") {
-        c2mock::Call_Log<std::tuple<int>> call_log{};
+        c2mock::mock::Call_Log<std::tuple<int>> call_log{};
 
         WHEN ("some calls are logged") {
             call_log.log(7);
@@ -35,7 +35,7 @@ SCENARIO (
     "[!shouldfail]"
 ) {
     GIVEN ("a Call_Log") {
-        c2mock::Call_Log<std::tuple<int>> call_log{};
+        c2mock::mock::Call_Log<std::tuple<int>> call_log{};
 
         WHEN ("some calls are logged") {
             call_log.log(7);
