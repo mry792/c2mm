@@ -1,4 +1,4 @@
-#include "c2mock/Call_Log.hpp"
+#include "c2mock/mock/Call_Log.hpp"
 
 #include <tuple>
 

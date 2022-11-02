@@ -6,8 +6,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "c2mock/Call_Log.hpp"
 #include "c2mock/matchers/Tuple_Matcher.hpp"
+#include "c2mock/mock/Call_Log.hpp"
 #include "c2mock/mock/args.hpp"
 
 namespace c2mock {

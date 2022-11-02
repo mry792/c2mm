@@ -1,5 +1,5 @@
-#ifndef C2MOCK__CALL_LOG_HPP_
-#define C2MOCK__CALL_LOG_HPP_
+#ifndef C2MOCK__MOCK__CALL_LOG_HPP_
+#define C2MOCK__MOCK__CALL_LOG_HPP_
 
 #include <algorithm>
 #include <memory>
@@ -79,4 +79,4 @@ class Call_Log {
 };
 }  // namespace c2mock
 
-#endif  // C2MOCK__CALL_LOG_HPP_
+#endif  // C2MOCK__MOCK__CALL_LOG_HPP_
