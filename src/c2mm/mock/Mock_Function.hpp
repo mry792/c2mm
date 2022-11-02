@@ -10,7 +10,7 @@
 #include "c2mm/mock/Call_Log.hpp"
 #include "c2mm/mock/args.hpp"
 
-namespace c2mock::mock {
+namespace c2mm::mock {
 /**
  * Primary template for @c Mock_Function is intentionally not defined.
  *
@@ -143,6 +143,6 @@ class Mock_Function<T_Return(T_Parameters...)> {
   private:
     Call_Log_Type calls_;
 };
-}  // namespace c2mock::mock
+}  // namespace c2mm::mock
 
 #endif  // C2MOCK__MOCK__MOCK_FUNCTION_HPP_

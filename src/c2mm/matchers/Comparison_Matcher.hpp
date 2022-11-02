@@ -8,7 +8,7 @@
 #include <catch2/catch_tostring.hpp>
 #include <catch2/matchers/catch_matchers_templated.hpp>
 
-namespace c2mock::matchers {
+namespace c2mm::matchers {
 /**
  * Matcher comparing to an expected value using a binary predicate.
  *
@@ -137,6 +137,6 @@ Comparison_Matcher<std::remove_cvref_t<T>, std::less_equal<>>
 less_or_equal_to (T&& expected) {
     return {std::forward<T>(expected), "<= "};
 }
-}  // namespace c2mock::matchers
+}  // namespace c2mm::matchers
 
 #endif  // C2MOCK__MATCHERS__COMPARISON_MATCHER_HPP_

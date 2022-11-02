@@ -6,7 +6,7 @@
 #include <catch2/catch_tostring.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
 
-namespace c2mock::matchers::utils {
+namespace c2mm::matchers::utils {
 /**
  * Type trait identifying whether or not @p T is a matcher.
  */
@@ -80,6 +80,6 @@ inline constexpr auto describe = [] (auto const& constraint) -> std::string {
         return ::Catch::Detail::stringify(constraint);
     }
 };
-}  // namespace c2mock::matchers::utils
+}  // namespace c2mm::matchers::utils
 
 #endif  // C2MOCK__MATCHERS_UTILS_HPP_

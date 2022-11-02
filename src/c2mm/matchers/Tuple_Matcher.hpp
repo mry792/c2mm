@@ -11,7 +11,7 @@
 #include "c2mm/mp/all.hpp"
 #include "c2mm/mp/zip_with.hpp"
 
-namespace c2mock::matchers {
+namespace c2mm::matchers {
 /**
  * A composite matcher for @c std::tuple.
  *
@@ -77,6 +77,6 @@ Tuple_Matcher<T_Constraints...> matches (
 ) {
     return Tuple_Matcher<T_Constraints...>{std::move(constraints)};
 }
-}  // namespace c2mock::matchers
+}  // namespace c2mm::matchers
 
 #endif  // C2MOCK__MATCHERS__TUPLE_MATCHER_HPP_

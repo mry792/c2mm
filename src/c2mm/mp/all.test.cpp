@@ -5,7 +5,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE ("catch2::mp::all") {
-    using c2mock::mp::all;
+    using c2mm::mp::all;
     using Ptr = void*;
 
     CHECK(all(std::tuple{true, true, Ptr(0x1), 7}));

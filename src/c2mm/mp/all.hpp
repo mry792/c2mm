@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <tuple>
 
-namespace c2mock::mp {
+namespace c2mm::mp {
 namespace impl_ {
 template <typename... Ts, std::size_t... t_idxs>
 constexpr bool all (
@@ -27,6 +27,6 @@ constexpr bool all (T const& values) {
         std::make_index_sequence<std::tuple_size_v<T>>{}
     );
 }
-}  // namespace c2mock::mp
+}  // namespace c2mm::mp
 
 #endif  // C2MOCK__MP__ALL_HPP_

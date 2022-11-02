@@ -4,9 +4,9 @@
 
 #include "c2mm/matchers/Comparison_Matcher.hpp"
 
-TEST_CASE ("c2mock::matchers::Tuple_Matcher") {
-    using c2mock::matchers::less_than;
-    using c2mock::matchers::matches;
+TEST_CASE ("c2mm::matchers::Tuple_Matcher") {
+    using c2mm::matchers::less_than;
+    using c2mm::matchers::matches;
 
     auto matcher = matches(std::tuple{7, less_than(3.14159)});
 
