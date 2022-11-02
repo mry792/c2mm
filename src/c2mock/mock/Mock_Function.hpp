@@ -1,5 +1,5 @@
-#ifndef C2MOCK__MOCK_FUNCTION_HPP_
-#define C2MOCK__MOCK_FUNCTION_HPP_
+#ifndef C2MOCK__MOCK__MOCK_FUNCTION_HPP_
+#define C2MOCK__MOCK__MOCK_FUNCTION_HPP_
 
 #include <utility>
 #include <type_traits>
@@ -145,4 +145,4 @@ class Mock_Function<T_Return(T_Parameters...)> {
 };
 }  // namespace c2mock
 
-#endif  // C2MOCK__MOCK_FUNCTION_HPP_
+#endif  // C2MOCK__MOCK__MOCK_FUNCTION_HPP_

@@ -1,4 +1,4 @@
-#include "c2mock/Mock_Function.hpp"
+#include "c2mock/mock/Mock_Function.hpp"
 
 #include <optional>
 #include <tuple>
