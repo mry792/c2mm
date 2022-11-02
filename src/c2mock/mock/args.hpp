@@ -5,7 +5,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace c2mock {
+namespace c2mock::mock {
 /**
  * Owning representation of the arguments of a function call.
  *
@@ -45,6 +45,6 @@ template <typename... T_Args>
 Bound_Args<T_Args...> bind_args (T_Args&&... args) {
     return {args...};
 }
-}  // namespace c2mock
+}  // namespace c2mock::mock
 
 #endif  // C2MOCK__MOCK__ARGS_HPP_

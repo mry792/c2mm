@@ -9,7 +9,7 @@
 
 SCENARIO ("If all calls are consumed, Mock_Function doesn't fail.") {
     GIVEN ("a Mock_Function") {
-        using c2mock::Mock_Function;
+        using c2mock::mock::Mock_Function;
         auto func_ptr = std::make_unique<Mock_Function<void(int, double)>>();
         auto& func = *func_ptr;
 
@@ -32,7 +32,7 @@ SCENARIO ("If all calls are consumed, Mock_Function doesn't fail.") {
 
 SCENARIO ("Mock_Function fails when calls aren't matched.", "[!shouldfail]") {
     GIVEN ("a Mock_Function") {
-        using c2mock::Mock_Function;
+        using c2mock::mock::Mock_Function;
         auto func_ptr = std::make_unique<Mock_Function<void(int, double)>>();
         auto& func = *func_ptr;
 
