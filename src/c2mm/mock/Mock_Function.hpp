@@ -8,6 +8,7 @@
 
 #include "c2mm/matchers/Tuple_Matcher.hpp"
 #include "c2mm/mock/Call_Log.hpp"
+#include "c2mm/mock/Default_Action.hpp"
 #include "c2mm/mock/args.hpp"
 
 namespace c2mm::mock {
@@ -68,12 +69,13 @@ class Mock_Function<T_Return(T_Parameters...)> {
      * @return @c void
      */
     T_Return operator () (T_Parameters... args) {
-        static_assert(
-            std::is_same_v<T_Return, void>,
-            "This function only supports void-return types for now."
-        );
+        // TODO: check expectations
 
         calls_.log(static_cast<T_Parameters&&>(args)...);
+
+        // TODO: check call handlers
+
+        return Default_Action<T_Return>{}();
     }
 
     /**
