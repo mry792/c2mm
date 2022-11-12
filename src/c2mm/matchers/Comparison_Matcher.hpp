@@ -1,5 +1,5 @@
-#ifndef C2MOCK__MATCHERS__COMPARISON_MATCHER_HPP_
-#define C2MOCK__MATCHERS__COMPARISON_MATCHER_HPP_
+#ifndef C2MM__MATCHERS__COMPARISON_MATCHER_HPP_
+#define C2MM__MATCHERS__COMPARISON_MATCHER_HPP_
 
 #include <functional>
 #include <string>
@@ -139,4 +139,4 @@ less_or_equal_to (T&& expected) {
 }
 }  // namespace c2mm::matchers
 
-#endif  // C2MOCK__MATCHERS__COMPARISON_MATCHER_HPP_
+#endif  // C2MM__MATCHERS__COMPARISON_MATCHER_HPP_
