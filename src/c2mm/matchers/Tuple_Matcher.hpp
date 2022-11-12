@@ -1,5 +1,5 @@
-#ifndef C2MOCK__MATCHERS__TUPLE_MATCHER_HPP_
-#define C2MOCK__MATCHERS__TUPLE_MATCHER_HPP_
+#ifndef C2MM__MATCHERS__TUPLE_MATCHER_HPP_
+#define C2MM__MATCHERS__TUPLE_MATCHER_HPP_
 
 #include <tuple>
 #include <type_traits>
@@ -79,4 +79,4 @@ Tuple_Matcher<T_Constraints...> matches (
 }
 }  // namespace c2mm::matchers
 
-#endif  // C2MOCK__MATCHERS__TUPLE_MATCHER_HPP_
+#endif  // C2MM__MATCHERS__TUPLE_MATCHER_HPP_
