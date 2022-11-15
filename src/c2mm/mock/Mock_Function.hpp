@@ -71,7 +71,7 @@ class Mock_Function<T_Return(T_Parameters...)> {
     T_Return operator () (T_Parameters... args) {
         // TODO: check expectations
 
-        calls_.log(static_cast<T_Parameters&&>(args)...);
+        calls_.log(std::forward<T_Parameters>(args)...);
 
         // TODO: check call handlers
 
