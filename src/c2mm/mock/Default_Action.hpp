@@ -17,7 +17,7 @@ struct Default_Action {
      * @return The new object.
      */
     template <typename... T_Args>
-    T_Return operator () (T_Args&&...) {
+    constexpr T_Return operator () (T_Args&&...) {
         if constexpr (std::is_default_constructible_v<T_Return>) {
             return T_Return{};
         } else {
@@ -38,7 +38,7 @@ struct Default_Action<void> {
      * No-op. All parameters are ignored.
      */
     template <typename... T_Args>
-    void operator () (T_Args&&...) {}
+    constexpr void operator () (T_Args&&...) {}
 };
 }  // namespace c2mm::mock
 
