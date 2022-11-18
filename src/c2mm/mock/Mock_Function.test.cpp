@@ -1,11 +1,14 @@
 #include "c2mm/mock/Mock_Function.hpp"
 
+#include <functional>
 #include <optional>
+#include <string>
 #include <tuple>
 
 #include <catch2/catch_test_macros.hpp>
 
 #include "c2mm/matchers/Comparison_Matcher.hpp"
+#include "c2mm/mock/reporters/Mock.hpp"
 
 SCENARIO ("If all calls are consumed, Mock_Function doesn't fail.") {
     GIVEN ("a Mock_Function") {
@@ -30,11 +33,17 @@ SCENARIO ("If all calls are consumed, Mock_Function doesn't fail.") {
     }
 }
 
-SCENARIO ("Mock_Function fails when calls aren't matched.", "[!shouldfail]") {
+namespace reporters = c2mm::mock::reporters;
+SCENARIO ("Mock_Function fails when calls aren't matched.") {
     GIVEN ("a Mock_Function") {
         using c2mm::mock::Mock_Function;
-        auto func_ptr = std::make_unique<Mock_Function<void(int, double)>>();
+        using Func = Mock_Function<void(double, int), reporters::Mock_Ref>;
+
+        reporters::Mock mock_reporter{};
+
+        auto func_ptr = std::make_unique<Func>(std::ref(mock_reporter));
         auto& func = *func_ptr;
+        (void)func;
 
         WHEN ("some calls are logged") {
             func(2.2, 4);
@@ -46,15 +55,27 @@ SCENARIO ("Mock_Function fails when calls aren't matched.", "[!shouldfail]") {
 
                 THEN ("Mock_Function::~Mock_Function() fails") {
                     func_ptr.reset();
+                    mock_reporter.check_called("unconsumed call");
                 }
             }
 
-            THEN ("unmatched .check_called() fails") {
-                func.check_called(0, 0);
-            }
+            AND_WHEN ("unmatched .validate_call() fails") {
+                using c2mm::matchers::less_than;
+                func.validate_called(
+                    std::ref(mock_reporter),
+                    less_than(3),
+                    less_than(-2)
+                );
 
-            THEN ("unmatched .require_called() fails") {
-                func.require_called(0, 0);
+                THEN ("the failure is reported") {
+                    mock_reporter.check_called(
+                        "No call whose arguments match."
+                    );
+
+                    func_ptr.reset();
+                    mock_reporter.check_called("unconsumed call");
+                    mock_reporter.check_called("unconsumed call");
+                }
             }
         }
     }
