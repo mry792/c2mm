@@ -10,6 +10,8 @@
 #include "c2mm/mock/Call_Log.hpp"
 #include "c2mm/mock/Default_Action.hpp"
 #include "c2mm/mock/args.hpp"
+#include "c2mm/mock/reporters/Fail.hpp"
+#include "c2mm/mock/reporters/Fail_Check.hpp"
 
 namespace c2mm::mock {
 /**
@@ -17,7 +19,7 @@ namespace c2mm::mock {
  *
  * See specializations for full documentation.
  */
-template <typename T_Signature>
+template <typename T_Signature, typename T_Log_Reporter = reporters::Fail_Check>
 class Mock_Function;
 
 /**
@@ -31,15 +33,27 @@ class Mock_Function;
  * @tparam T_Return The return type of the function. (Currently only supports @c
  *     void.)
  * @tparam T_Parameters Types of the mocked function's parameters.
+ * @tparam T_Log_Reporter Policy dictating how failures are reported from
+ *     unconsumed logged calls.
  */
-template <typename T_Return, typename... T_Parameters>
-class Mock_Function<T_Return(T_Parameters...)> {
+template <typename T_Return, typename... T_Parameters, typename T_Log_Reporter>
+class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
     template <typename T>
     using MatcherBase = Catch::Matchers::MatcherBase<T>;
 
   public:
     using Signature = T_Return(T_Parameters...);
-    using Call_Log_Type = Call_Log<Captured_Args<T_Parameters...>>;
+    using Call_Log_Type = Call_Log<
+        Captured_Args<T_Parameters...>,
+        T_Log_Reporter
+    >;
+
+    /**
+     * Construct an instance with a given reporter.
+     * @param[in] reporter Callable used to report failures (unconsumed calls).
+     */
+    explicit Mock_Function (T_Log_Reporter reporter = T_Log_Reporter{})
+          : calls_{std::move(reporter)} {}
 
     /**
      * When a @c Mock_Function is destroyed, it fails the test if there are any
@@ -71,7 +85,7 @@ class Mock_Function<T_Return(T_Parameters...)> {
     T_Return operator () (T_Parameters... args) {
         // TODO: check expectations
 
-        calls_.log(static_cast<T_Parameters&&>(args)...);
+        calls_.log(std::forward<T_Parameters>(args)...);
 
         // TODO: check call handlers
 
@@ -81,14 +95,38 @@ class Mock_Function<T_Return(T_Parameters...)> {
     /**
      * Check for a past call whose arguments match @p arg_constraints.
      *
-     * Checks each unconsumed logged call in turn until one matches the given @p
+     * Checks each unconsumed logged call in turn until one matches the given @c
      * arg_constraints. For each constraint that is a matcher, the comparison
      * is equivalent to `constraint.match(value)`. Otherwise, the comparison is
      * `operator ==`. All comparisons must resolve to @c true for a call to be
      * matched.
      *
      * Once a call is matched, it is consumed and cannot match another set of
-     * constraints in a future call.
+     * constraints in a future validation.
+     *
+     * This is a lower level function that is typically not used by users of
+     * this library. Prefer one of `check_called` or `require_called` bellow.
+     *
+     * @param[out] reporter Callable used to report a failure to find a logged
+     *     call that matches the constraints.
+     * @param[in] arg_constraints Constraints to check against arguments of
+     *     logged calls.
+     */
+    template <typename T_Reporter, typename... T_Constraints>
+    auto validate_called (
+        T_Reporter reporter,
+        T_Constraints const&... arg_constraints
+    ) {
+        auto matcher = matchers::matches(bind_args(arg_constraints...));
+
+        if (not calls_.consume_match(matcher)) {
+            // TODO(emery): Print out constraints.
+            reporter("No call whose arguments match.");
+        }
+    }
+
+    /**
+     * Check for a past call whose arguments match @p arg_constraints.
      *
      * If no call matches @p arg_constraints this is effectively a failed Catch2
      * CHECK. It fails the test but continues executing.
@@ -97,30 +135,11 @@ class Mock_Function<T_Return(T_Parameters...)> {
      */
     template <typename... T_Constraints>
     void check_called (T_Constraints const&... arg_constraints) {
-        static_assert(
-            std::is_same_v<T_Return, void>,
-            "This function is only available for void-return mock functions."
-        );
-
-        auto matcher = matchers::matches(bind_args(arg_constraints...));
-
-        if (not calls_.consume_match(matcher)) {
-            // TODO(emery): Print out matchers.
-            FAIL_CHECK("No call whose arguments match.");
-        }
+        validate_called(reporters::Fail_Check{}, arg_constraints...);
     }
 
     /**
      * Check for a past call whose arguments match @p arg_constraints.
-     *
-     * Checks each unconsumed logged call in turn until one matches the given @p
-     * arg_constraints. For each constraint that is a matcher, the comparison
-     * is equivalent to `constraint.match(value)`. Otherwise, the comparison is
-     * `operator ==`. All comparisons must resolve to @c true for a call to be
-     * matched.
-     *
-     * Once a call is matched, it is consumed and cannot match another set of
-     * constraints in a future call.
      *
      * If no call matches @p arg_constraints this is effectively a failed Catch2
      * REQUIRE. It fails the test stops execution.
@@ -129,17 +148,7 @@ class Mock_Function<T_Return(T_Parameters...)> {
      */
     template <typename... T_Constraints>
     void require_called (T_Constraints const&... arg_constraints) {
-        static_assert(
-            std::is_same_v<T_Return, void>,
-            "This function is only available for void-return mock functions."
-        );
-
-        auto matcher = matchers::matches(bind_args(arg_constraints...));
-
-        if (not calls_.consume_match(matcher)) {
-            // TODO(emery): Print out matchers.
-            FAIL("No call whose arguments match.");
-        }
+        validate_called(reporters::Fail{}, arg_constraints...);
     }
 
   private:

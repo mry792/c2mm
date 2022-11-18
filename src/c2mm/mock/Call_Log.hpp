@@ -3,9 +3,12 @@
 
 #include <algorithm>
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include <catch2/catch_test_macros.hpp>
+
+#include "c2mm/mock/reporters/Fail_Check.hpp"
 
 namespace c2mm::mock {
 /**
@@ -13,12 +16,20 @@ namespace c2mm::mock {
  *
  * @tparam T_Arg_Tuple A @c std::tuple representing the arguments to the
  *     function in question.
+ * @tparam T_Reporter Policy dictating how failures are reported.
  */
-template <typename T_Arg_Tuple>
+template <typename T_Arg_Tuple, typename T_Reporter = reporters::Fail_Check>
 class Call_Log {
   public:
     using Arg_Tuple = T_Arg_Tuple;
     using Call_List = std::vector<std::unique_ptr<Arg_Tuple const>>;
+
+    /**
+     * Construct an instance with a given reporter.
+     * @param[in] reporter Callable used to report failures (unconsumed calls).
+     */
+    explicit Call_Log (T_Reporter reporter = T_Reporter{})
+          : reporter_{std::move(reporter)} {}
 
     /**
      * Read-only accessor for the unconsumed calls logged with this object.
@@ -66,15 +77,18 @@ class Call_Log {
      * check-style verification where failure fails the test but continues
      * executing.
      */
-    void check_no_calls () const {
+    void check_no_calls () {
         for (auto const& call : calls_) {
             (void)call;
             // TODO(emery): print out function name and arguments
-            FAIL_CHECK("unconsumed call");
+            reporter_("unconsumed call");
         }
+
+        calls_.clear();
     }
 
   private:
+    T_Reporter reporter_;
     Call_List calls_;
 };
 }  // namespace c2mm::mock
