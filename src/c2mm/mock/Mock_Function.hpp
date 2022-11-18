@@ -19,7 +19,7 @@ namespace c2mm::mock {
  *
  * See specializations for full documentation.
  */
-template <typename T_Signature>
+template <typename T_Signature, typename T_Log_Reporter = reporters::Fail_Check>
 class Mock_Function;
 
 /**
@@ -33,15 +33,27 @@ class Mock_Function;
  * @tparam T_Return The return type of the function. (Currently only supports @c
  *     void.)
  * @tparam T_Parameters Types of the mocked function's parameters.
+ * @tparam T_Log_Reporter Policy dictating how failures are reported from
+ *     unconsumed logged calls.
  */
-template <typename T_Return, typename... T_Parameters>
-class Mock_Function<T_Return(T_Parameters...)> {
+template <typename T_Return, typename... T_Parameters, typename T_Log_Reporter>
+class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
     template <typename T>
     using MatcherBase = Catch::Matchers::MatcherBase<T>;
 
   public:
     using Signature = T_Return(T_Parameters...);
-    using Call_Log_Type = Call_Log<Captured_Args<T_Parameters...>>;
+    using Call_Log_Type = Call_Log<
+        Captured_Args<T_Parameters...>,
+        T_Log_Reporter
+    >;
+
+    /**
+     * Construct an instance with a given reporter.
+     * @param[in] reporter Callable used to report failures (unconsumed calls).
+     */
+    explicit Mock_Function (T_Log_Reporter reporter = T_Log_Reporter{})
+          : calls_{std::move(reporter)} {}
 
     /**
      * When a @c Mock_Function is destroyed, it fails the test if there are any
@@ -102,7 +114,7 @@ class Mock_Function<T_Return(T_Parameters...)> {
      */
     template <typename T_Reporter, typename... T_Constraints>
     auto validate_called (
-        T_Reporter& reporter,
+        T_Reporter reporter,
         T_Constraints const&... arg_constraints
     ) {
         auto matcher = matchers::matches(bind_args(arg_constraints...));
