@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
-project(c2mm VERSION 0.0.1 LANGUAGES CXX)
+project(c2mm LANGUAGES CXX)
 
 find_package(brokkr REQUIRED)
+brokkr_project_version_from_git()
 
 add_subdirectory(src)
 
