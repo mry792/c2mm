@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
 project(c2mm VERSION 0.0.1 LANGUAGES CXX)
 
+find_package(brokkr REQUIRED)
+
 add_subdirectory(src)
 
 ###
@@ -13,19 +15,9 @@ install(
 )
 install(
     EXPORT ${PROJECT_NAME}-targets
-    FILE ${PROJECT_NAME}-config.cmake
+    FILE ${PROJECT_NAME}-targets.cmake
     NAMESPACE ${PROJECT_NAME}::
     DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    ${PROJECT_NAME}-config-version.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
-install(
-    FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-    DESTINATION lib/cmake/${PROJECT_NAME}
-)
+brokkr_package(CONFIG_TEMPLATE cmake/config.cmake.in)
