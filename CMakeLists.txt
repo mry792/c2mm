@@ -1,24 +1,16 @@
-cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
 project(c2mm LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
 
 find_package(brokkr REQUIRED)
 brokkr_project_version_from_git()
 
-add_subdirectory(src)
-
-###
-# Install Package
-###
-
-install(
-    TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}-targets
-)
-install(
-    EXPORT ${PROJECT_NAME}-targets
-    FILE ${PROJECT_NAME}-targets.cmake
-    NAMESPACE ${PROJECT_NAME}::
-    DESTINATION lib/cmake/${PROJECT_NAME}
+brokkr_library(
+    ${PROJECT_NAME}
+    LIBRARY
+        DEPENDENCIES Catch2::Catch2
+    UNIT_TESTS PROFILE Catch2
 )
 
-brokkr_package(CONFIG_TEMPLATE cmake/config.cmake.in)
+brokkr_package()
