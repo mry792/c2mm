@@ -7,7 +7,7 @@ from conan.tools.scm import Git
 from conans.tools import Git as LegacyGit
 
 
-class C2MockRecipe (ConanFile):
+class C2MMRecipe (ConanFile):
     name = 'c2mm'
     # version = (computed from local repo)
 
@@ -17,7 +17,6 @@ class C2MockRecipe (ConanFile):
 
     settings = 'os', 'compiler', 'build_type', 'arch',
     generators = (
-        'virtualenv',
         'CMakeDeps',
         'CMakeToolchain',
     )
@@ -31,6 +30,7 @@ class C2MockRecipe (ConanFile):
         self.version = tag[1:]
 
     requires = 'catch2/3.1.0'
+    tool_requires = 'brokkr/0.2.2@egoss/stable'
 
     def export (self):
         git = Git(self, self.recipe_folder)
