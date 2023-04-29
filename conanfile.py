@@ -7,7 +7,7 @@ from conan.tools.scm import Git
 from conans.tools import Git as LegacyGit
 
 
-class C2MockRecipe (ConanFile):
+class C2MMRecipe (ConanFile):
     name = 'c2mm'
     # version = (computed from local repo)
 
