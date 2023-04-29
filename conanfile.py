@@ -17,7 +17,6 @@ class C2MMRecipe (ConanFile):
 
     settings = 'os', 'compiler', 'build_type', 'arch',
     generators = (
-        'virtualenv',
         'CMakeDeps',
         'CMakeToolchain',
     )
