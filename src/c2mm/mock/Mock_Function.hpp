@@ -7,11 +7,17 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "c2mm/matchers/Tuple_Matcher.hpp"
+#include "c2mm/matchers/Typed_Wrapper.hpp"
 #include "c2mm/mock/Call_Log.hpp"
 #include "c2mm/mock/Default_Action.hpp"
+#include "c2mm/mock/Expectation.hpp"
+#include "c2mm/mock/Expectation_Handle.hpp"
 #include "c2mm/mock/args.hpp"
 #include "c2mm/mock/reporters/Fail.hpp"
 #include "c2mm/mock/reporters/Fail_Check.hpp"
+#include "c2mm/mp/utils.hpp"
+
+#define FWD(X) std::forward<decltype(X)>(X)
 
 namespace c2mm::mock {
 /**
@@ -30,8 +36,7 @@ class Mock_Function;
  * check_call() or @c require_call(). See the documentation for those member
  * functions below.
  *
- * @tparam T_Return The return type of the function. (Currently only supports @c
- *     void.)
+ * @tparam T_Return The return type of the function.
  * @tparam T_Parameters Types of the mocked function's parameters.
  * @tparam T_Log_Reporter Policy dictating how failures are reported from
  *     unconsumed logged calls.
@@ -47,6 +52,7 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
         Captured_Args<T_Parameters...>,
         T_Log_Reporter
     >;
+    using Expectation_Type = Expectation<Signature>;
 
     /**
      * Construct an instance with a given reporter.
@@ -72,23 +78,83 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
     }
 
     /**
+     * Create an @c Expectation for calls that match @p arg_constraints.
+     *
+     * This is a lower level function that is typically not used by users of
+     * this library. Prefer `on_call` bellow.
+     *
+     * @param[in] arg_constraints... Constraints on individual arguments. In
+     *     order for an expectation to apply, all arguments must satisfy their
+     *     respective constraints.
+     *
+     * @return A builder that can be used to configure other properties of the
+     *     handler.
+     */
+    template <typename... T_Constraints>
+    Expectation_Handle<Expectation_Type>
+    make_expectation (T_Constraints&&... arg_constraints) {
+        using c2mm::matchers::matches;
+        using c2mm::matchers::wrap_for;
+        using c2mm::mp::utils::wrap_unique;
+
+        return expectations_.emplace_back(
+            wrap_unique(
+                wrap_for<Bound_Args<T_Parameters...>>(
+                    matches(
+                        capture_args(
+                            FWD(arg_constraints)...
+                        )
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * Set a "passive" @c Expectation for calls that match @p arg_constraints.
+     *
+     * @param[in] arg_constraints... Constraints on individual arguments. In
+     *     order for an expectation to apply, all arguments must satisfy their
+     *     respective constraints.
+     *
+     * @return A builder that can be used to configure other properties of the
+     *     handler.
+     */
+    template <typename... T_Constraints>
+    Expectation_Handle<Expectation_Type>
+    on_call (T_Constraints&&... arg_constraints) {
+        Expectation_Handle handle = make_expectation(FWD(arg_constraints)...);
+
+        // Set defaults.
+        handle.execute(Default_Action<T_Return>{});
+
+        return handle;
+    }
+
+    /**
      * "Call" the mock function.
      *
-     * This logs the call to be checked later. If not consumed by a @c
-     * check_called or a @c require_called before the @c Mock_Function object
-     * is destroyed, the current Catch2 test will fail.
+     * If there is an expectation that can consume these arguments, delegate to
+     * the first expectation that matches. Otherwise, the call will be logged
+     * to be checked later. If not consumed by a @c check_called or a @c
+     * require_called before the @c Mock_Function object is destroyed, the
+     * current Catch2 test will fail.
      *
      * @param[in] args The arguments of the call.
      *
-     * @return @c void
+     * @return @c If consumed, will return the result of the action of the
+     *     expectation that consumed the call. Otherwise will return the result
+     *     of the default action.
      */
-    T_Return operator () (T_Parameters... args) {
-        // TODO: check expectations
+    T_Return operator () (T_Parameters&&... args) {
+        auto bound_args = bind_args(args...);
+        for (auto& ex : expectations_) {
+            if (ex.can_consume(bound_args)) {
+                return ex.handle_call(FWD(args)...);
+            }
+        }
 
-        calls_.log(std::forward<T_Parameters>(args)...);
-
-        // TODO: check call handlers
-
+        calls_.log(FWD(args)...);
         return Default_Action<T_Return>{}();
     }
 
@@ -153,7 +219,10 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
 
   private:
     Call_Log_Type calls_;
+    std::vector<Expectation_Type> expectations_;
 };
 }  // namespace c2mm::mock
+
+#undef FWD
 
 #endif  // C2MOCK__MOCK__MOCK_FUNCTION_HPP_
