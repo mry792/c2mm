@@ -2,6 +2,7 @@
 #define C2MM__MOCK__EXPECTATION_HANDLE_HPP_
 
 #include <functional>
+#include <utility>
 
 namespace c2mm::mock {
 /**
@@ -18,6 +19,16 @@ class Expectation_Handle {
      */
     Expectation_Handle (T_Expectation& expectation)
           : expectation_{expectation} {}
+
+    /**
+     * Set an action to be performed when the expectation is invoked.
+     * @param[in] action The action to perform.
+     */
+    template <typename T_Action>
+    Expectation_Handle& execute (T_Action&& action) {
+        expectation_.get().action_ = std::forward<T_Action>(action);
+        return *this;
+    }
 
   private:
     std::reference_wrapper<T_Expectation> expectation_;

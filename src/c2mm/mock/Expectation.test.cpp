@@ -1,5 +1,6 @@
 #include "c2mm/mock/Expectation.hpp"
 
+#include <functional>
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -8,6 +9,8 @@
 
 #include "c2mm/matchers/Tuple_Matcher.hpp"
 #include "c2mm/matchers/Typed_Wrapper.hpp"
+#include "c2mm/mock/Expectation_Handle.hpp"
+#include "c2mm/mock/Mock_Function.hpp"
 #include "c2mm/mock/args.hpp"
 #include "c2mm/mp/utils.hpp"
 
@@ -47,6 +50,25 @@ SCENARIO ("Class c2mm::mock::Expectation controls access to an action.") {
 
             THEN ("no more calls can be consumed") {
                 CHECK(not expectation.can_consume(bind_args(3, 4)));
+            }
+        }
+
+        AND_GIVEN ("a custom action") {
+            using c2mm::mock::Expectation_Handle;
+            using c2mm::mock::Mock_Function;
+
+            Mock_Function<int(int, int)> mock{};
+
+            Expectation_Handle{expectation}
+                .execute(std::ref(mock));
+
+            WHEN ("the call is handled") {
+                auto result = expectation.handle_call(3, 4);
+
+                THEN ("the action is called") {
+                    CHECK(result == 0);
+                    mock.check_called(3, 4);
+                }
             }
         }
     }

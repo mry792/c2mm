@@ -2,12 +2,14 @@
 #define C2MM__MOCK__EXPECTATION_HPP_
 
 #include <cstddef>
+#include <functional>
 #include <memory>
 #include <utility>
 
 #include <catch2/matchers/catch_matchers.hpp>
 
 #include "c2mm/mock/Default_Action.hpp"
+#include "c2mm/mock/Expectation_Handle.hpp"
 #include "c2mm/mock/args.hpp"
 
 namespace c2mm::mock {
@@ -25,9 +27,13 @@ class Expectation;
  */
 template <typename T_Return, typename... T_Parameters>
 class Expectation<T_Return(T_Parameters...)> {
+    template <typename T_Expectation>
+    friend class Expectation_Handle;
+
   public:
     using Args_Tuple = Bound_Args<T_Parameters...>;
     using Matcher = Catch::Matchers::MatcherBase<Args_Tuple>;
+    using Action = std::function<T_Return(T_Parameters...)>;
 
     /**
      * Construct from required components.
@@ -68,25 +74,21 @@ class Expectation<T_Return(T_Parameters...)> {
     }
 
     /**
-     * Handle the call by delegating to the default action.
-     *
-     * @todo Handle the call by delegating to the action specified at
-     *     construction.
+     * Handle the call by delegating to the internal action.
      *
      * @param[in] args... Arguments of the call being handled, forwarded to the
      *     internal action.
      *
      * @return The result of the action.
      */
-    T_Return handle_call (T_Parameters&&... /* args */) {
+    T_Return handle_call (T_Parameters&&... args) {
         ++call_count_;
-
-        // TODO: execute custom action
-        return Default_Action<T_Return>{}();
+        return action_(std::forward<T_Parameters>(args)...);
     }
 
   private:
     std::unique_ptr<Matcher> matcher_;
+    Action action_ = Default_Action<T_Return>{};
 
     std::size_t call_count_ = 0;
 };
