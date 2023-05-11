@@ -41,10 +41,10 @@ SCENARIO ("If some calls are unconsumed, Call_Log::check_no_calls() fails.") {
 
     GIVEN ("a Call_Log") {
         using c2mm::mock::Call_Log;
-        using Test_Call_Log = Call_Log<std::tuple<int>, reporters::Mock_Ref>;
+        using Test_Call_Log = Call_Log<std::tuple<int>>;
 
         reporters::Mock mock_reporter{};
-        Test_Call_Log call_log{std::ref(mock_reporter)};
+        Test_Call_Log call_log{};
 
         WHEN ("some calls are logged") {
             call_log.log(7);
@@ -56,7 +56,7 @@ SCENARIO ("If some calls are unconsumed, Call_Log::check_no_calls() fails.") {
                 CHECK(call_log.consume_match(matches(std::tuple{-4})));
 
                 THEN ("Call_Log::check_no_calls() fails (twice)") {
-                    call_log.check_no_calls();
+                    call_log.check_no_calls(std::ref(mock_reporter));
                     mock_reporter.check_called("unconsumed call");
                     mock_reporter.check_called("unconsumed call");
                 }

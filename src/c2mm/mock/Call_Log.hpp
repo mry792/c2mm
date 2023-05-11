@@ -18,18 +18,11 @@ namespace c2mm::mock {
  *     function in question.
  * @tparam T_Reporter Policy dictating how failures are reported.
  */
-template <typename T_Arg_Tuple, typename T_Reporter = reporters::Fail_Check>
+template <typename T_Arg_Tuple>
 class Call_Log {
   public:
     using Arg_Tuple = T_Arg_Tuple;
     using Call_List = std::vector<std::unique_ptr<Arg_Tuple const>>;
-
-    /**
-     * Construct an instance with a given reporter.
-     * @param[in] reporter Callable used to report failures (unconsumed calls).
-     */
-    explicit Call_Log (T_Reporter reporter = T_Reporter{})
-          : reporter_{std::move(reporter)} {}
 
     /**
      * Read-only accessor for the unconsumed calls logged with this object.
@@ -77,18 +70,18 @@ class Call_Log {
      * check-style verification where failure fails the test but continues
      * executing.
      */
-    void check_no_calls () {
+    template <typename T_Reporter = reporters::Fail_Check>
+    void check_no_calls (T_Reporter reporter = T_Reporter{}) {
         for (auto const& call : calls_) {
             (void)call;
             // TODO(emery): print out function name and arguments
-            reporter_("unconsumed call");
+            reporter("unconsumed call");
         }
 
         calls_.clear();
     }
 
   private:
-    T_Reporter reporter_;
     Call_List calls_;
 };
 }  // namespace c2mm::mock

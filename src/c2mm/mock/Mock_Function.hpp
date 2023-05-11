@@ -48,10 +48,7 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
 
   public:
     using Signature = T_Return(T_Parameters...);
-    using Call_Log_Type = Call_Log<
-        Captured_Args<T_Parameters...>,
-        T_Log_Reporter
-    >;
+    using Call_Log_Type = Call_Log<Captured_Args<T_Parameters...>>;
     using Expectation_Type = Expectation<Signature>;
 
     /**
@@ -59,14 +56,14 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
      * @param[in] reporter Callable used to report failures (unconsumed calls).
      */
     explicit Mock_Function (T_Log_Reporter reporter = T_Log_Reporter{})
-          : calls_{std::move(reporter)} {}
+          : log_reporter_{std::move(reporter)} {}
 
     /**
      * When a @c Mock_Function is destroyed, it fails the test if there are any
      * unconsumed calls.
      */
     ~Mock_Function () {
-        calls_.check_no_calls();
+        calls_.check_no_calls(log_reporter_);
     }
 
     /**
@@ -218,6 +215,7 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
     }
 
   private:
+    T_Log_Reporter log_reporter_;
     Call_Log_Type calls_;
     std::vector<Expectation_Type> expectations_;
 };
