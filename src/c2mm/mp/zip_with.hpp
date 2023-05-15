@@ -2,8 +2,12 @@
 #define C2MOCK__MP__ZIP_WITH_HPP_
 
 #include <cstddef>
+#include <functional>
 #include <tuple>
+#include <type_traits>
 #include <utility>
+
+#define FWD(X) std::forward<decltype(X)>(X)
 
 namespace c2mm::mp {
 namespace impl_ {
@@ -13,10 +17,10 @@ template <
     typename... T_Arg_Sets
 >
 constexpr auto zip_with_call (
-    T_Func func,
-    T_Arg_Sets const&... arg_sets
+    T_Func&& func,
+    T_Arg_Sets&&... arg_sets
 ) {
-    return func(std::get<t_idx>(arg_sets)...);
+    return std::invoke(FWD(func), std::get<t_idx>(FWD(arg_sets))...);
 }
 
 template <
@@ -25,11 +29,11 @@ template <
     std::size_t... t_idxs
 >
 constexpr auto zip_with (
-    T_Func func,
+    T_Func&& func,
     std::index_sequence<t_idxs...>,
-    T_Arg_Sets const&... arg_sets
+    T_Arg_Sets&&... arg_sets
 ) {
-    return std::tuple{zip_with_call<t_idxs>(func, arg_sets...)...};
+    return std::tuple{zip_with_call<t_idxs>(FWD(func), FWD(arg_sets)...)...};
 }
 }  // namespace impl_
 
@@ -49,19 +53,22 @@ constexpr auto zip_with (
  */
 template <typename T_Func, typename T_First_Set, typename... T_Arg_Sets>
 constexpr auto zip_with (
-    T_Func func,
-    T_First_Set const& first_set,
-    T_Arg_Sets const&... arg_sets
+    T_Func&& func,
+    T_First_Set&& first_set,
+    T_Arg_Sets&&... arg_sets
 ) {
-    constexpr int num_elements = std::tuple_size_v<T_First_Set>;
+    constexpr int num_elements =
+        std::tuple_size_v<std::remove_cvref_t<T_First_Set>>;
     // static_assert(num_elements == std::tuple_size_v<T_Arg_Sets>)...;
 
     return impl_::zip_with(
-        std::move(func),
+        FWD(func),
         std::make_index_sequence<num_elements>{},
-        first_set, arg_sets...
+        FWD(first_set), FWD(arg_sets)...
     );
 }
 }  // namespace c2mm::mp
+
+#undef FWD
 
 #endif  // C2MOCK__MP__ZIP_WITH_HPP_
