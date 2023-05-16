@@ -33,7 +33,29 @@ constexpr auto zip_with (
     std::index_sequence<t_idxs...>,
     T_Arg_Sets&&... arg_sets
 ) {
-    return std::tuple{zip_with_call<t_idxs>(FWD(func), FWD(arg_sets)...)...};
+    if constexpr (
+        std::is_same_v<
+            void,
+            std::invoke_result_t<
+                T_Func,
+                decltype(std::get<0ul>(arg_sets))...
+            >
+        >
+    ) {
+        (void)(
+            zip_with_call<t_idxs>(
+                FWD(func),
+                FWD(arg_sets)...
+            ), ...
+        );
+    } else {
+        return std::tuple{
+            zip_with_call<t_idxs>(
+                FWD(func),
+                FWD(arg_sets)...
+            )...
+        };
+    }
 }
 }  // namespace impl_
 
