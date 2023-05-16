@@ -10,13 +10,13 @@
 #define FWD(X) std::forward<decltype(X)>(X)
 
 namespace c2mm::mp {
-namespace impl_ {
+namespace zip_with_impl_ {
 template <
     std::size_t t_idx,
     typename T_Func,
     typename... T_Arg_Sets
 >
-constexpr auto zip_with_call (
+constexpr auto zip_with_call_ (
     T_Func&& func,
     T_Arg_Sets&&... arg_sets
 ) {
@@ -28,7 +28,7 @@ template <
     typename... T_Arg_Sets,
     std::size_t... t_idxs
 >
-constexpr auto zip_with (
+constexpr auto zip_with_ (
     T_Func&& func,
     std::index_sequence<t_idxs...>,
     T_Arg_Sets&&... arg_sets
@@ -43,21 +43,21 @@ constexpr auto zip_with (
         >
     ) {
         (void)(
-            zip_with_call<t_idxs>(
+            zip_with_call_<t_idxs>(
                 FWD(func),
                 FWD(arg_sets)...
             ), ...
         );
     } else {
         return std::tuple{
-            zip_with_call<t_idxs>(
+            zip_with_call_<t_idxs>(
                 FWD(func),
                 FWD(arg_sets)...
             )...
         };
     }
 }
-}  // namespace impl_
+}  // namespace zip_with_impl_
 
 /**
  * Zip one or more @c std::tuples and transform each group with @p func.
@@ -83,7 +83,7 @@ constexpr auto zip_with (
         std::tuple_size_v<std::remove_cvref_t<T_First_Set>>;
     // static_assert(num_elements == std::tuple_size_v<T_Arg_Sets>)...;
 
-    return impl_::zip_with(
+    return zip_with_impl_::zip_with_(
         FWD(func),
         std::make_index_sequence<num_elements>{},
         FWD(first_set), FWD(arg_sets)...
