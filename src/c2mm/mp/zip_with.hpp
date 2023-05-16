@@ -57,6 +57,11 @@ constexpr auto zip_with_ (
         };
     }
 }
+
+template <typename T, T... t_values>
+constexpr auto to_tuple (std::integer_sequence<T, t_values...>) {
+    return std::tuple{t_values...};
+}
 }  // namespace zip_with_impl_
 
 /**
@@ -86,6 +91,33 @@ constexpr auto zip_with (
     return zip_with_impl_::zip_with_(
         FWD(func),
         std::make_index_sequence<num_elements>{},
+        FWD(first_set), FWD(arg_sets)...
+    );
+}
+
+/**
+ * Zip indices and one or more @c std::tuples and transform each group with @p
+ * func.
+ *
+ * Other than the addition of the index at the start of the argument list, this
+ * is identical to @c zip_with above.
+ */
+template <typename T_Func, typename T_First_Set, typename... T_Arg_Sets>
+constexpr auto zip_with_idx (
+    T_Func&& func,
+    T_First_Set&& first_set,
+    T_Arg_Sets&&... arg_sets
+) {
+    constexpr int num_elements =
+        std::tuple_size_v<std::remove_cvref_t<T_First_Set>>;
+    // static_assert(num_elements == std::tuple_size_v<T_Arg_Sets>)...;
+
+    constexpr std::make_index_sequence<num_elements> idx_seq{};
+
+    return zip_with_impl_::zip_with_(
+        FWD(func),
+        idx_seq,
+        zip_with_impl_::to_tuple(idx_seq),
         FWD(first_set), FWD(arg_sets)...
     );
 }
