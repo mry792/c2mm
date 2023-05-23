@@ -3,12 +3,15 @@
 
 #include <algorithm>
 #include <memory>
+#include <sstream>
 #include <utility>
 #include <vector>
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <catch2/catch_tostring.hpp>
 #include "c2mm/mock/reporters/Fail_Check.hpp"
+#include "c2mm/mp/for_each.hpp"
 
 namespace c2mm::mock {
 /**
@@ -73,9 +76,19 @@ class Call_Log {
     template <typename T_Reporter = reporters::Fail_Check>
     void check_no_calls (T_Reporter reporter = T_Reporter{}) {
         for (auto const& call : calls_) {
-            (void)call;
-            // TODO(emery): print out function name and arguments
-            reporter("unconsumed call");
+            using c2mm::mp::for_each;
+            using ::Catch::Detail::stringify;
+
+            std::ostringstream buffer{};
+            buffer << "unconsumed call with args:\n";
+            for_each(
+                *call,
+                [&buffer] (std::size_t idx, auto const& arg) {
+                    buffer << "  " << idx << ": " << stringify(arg) << "\n";
+                }
+            );
+
+            reporter(buffer.str());
         }
 
         calls_.clear();

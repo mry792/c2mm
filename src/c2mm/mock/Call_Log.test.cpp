@@ -57,8 +57,8 @@ SCENARIO ("If some calls are unconsumed, Call_Log::check_no_calls() fails.") {
 
                 THEN ("Call_Log::check_no_calls() fails (twice)") {
                     call_log.check_no_calls(std::ref(mock_reporter));
-                    mock_reporter.check_called("unconsumed call");
-                    mock_reporter.check_called("unconsumed call");
+                    mock_reporter.check_called("unconsumed call with args:\n  0: 7\n");
+                    mock_reporter.check_called("unconsumed call with args:\n  0: 2\n");
                 }
             }
         }

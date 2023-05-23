@@ -55,7 +55,11 @@ SCENARIO ("Mock_Function fails when calls aren't matched.") {
 
                 THEN ("Mock_Function::~Mock_Function() fails") {
                     func_ptr.reset();
-                    mock_reporter.check_called("unconsumed call");
+                    mock_reporter.check_called(
+                        "unconsumed call with args:\n"
+                        "  0: 3.3\n"
+                        "  1: -2\n"
+                    );
                 }
             }
 
@@ -73,8 +77,16 @@ SCENARIO ("Mock_Function fails when calls aren't matched.") {
                     );
 
                     func_ptr.reset();
-                    mock_reporter.check_called("unconsumed call");
-                    mock_reporter.check_called("unconsumed call");
+                    mock_reporter.check_called(
+                        "unconsumed call with args:\n"
+                        "  0: 2.2\n"
+                        "  1: 4\n"
+                    );
+                    mock_reporter.check_called(
+                        "unconsumed call with args:\n"
+                        "  0: 3.3\n"
+                        "  1: -2\n"
+                    );
                 }
             }
         }
