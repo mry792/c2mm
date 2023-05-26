@@ -34,6 +34,14 @@ class Tuple_Matcher final : Catch::Matchers::MatcherGenericBase {
           : constraints_{std::move(constraints)} {}
 
     /**
+     * Read-only accessor to the underlying constraints.
+     * @return Immutable reference to the constraints.
+     */
+    std::tuple<T_Constraints...> const& constraints () const {
+        return constraints_;
+    }
+
+    /**
      * Compares elements of @p values to corresponding constraints.
      *
      * For each constraint that is a matcher, the comparison is equivalent to
