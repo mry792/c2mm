@@ -1,5 +1,5 @@
-#ifndef C2MM__MATCHERS_UTILS_HPP_
-#define C2MM__MATCHERS_UTILS_HPP_
+#ifndef C2MM__MATCHERS__UTILS_HPP_
+#define C2MM__MATCHERS__UTILS_HPP_
 
 #include <type_traits>
 
@@ -82,4 +82,4 @@ inline constexpr auto describe = [] (auto const& constraint) -> std::string {
 };
 }  // namespace c2mm::matchers::utils
 
-#endif  // C2MM__MATCHERS_UTILS_HPP_
+#endif  // C2MM__MATCHERS__UTILS_HPP_
