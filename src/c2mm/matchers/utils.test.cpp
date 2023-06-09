@@ -28,6 +28,6 @@ TEST_CASE ("utils::describe") {
     using c2mm::matchers::greater_than;
     using c2mm::matchers::utils::describe;
 
-    CHECK(describe(greater_than(-4)) == "> -4");
-    CHECK(describe(-4) == "-4");
+    CHECK(describe(greater_than(-4)) == "is > -4");
+    CHECK(describe(-4) == "is -4");
 }

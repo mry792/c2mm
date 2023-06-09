@@ -50,7 +50,7 @@ SCENARIO ("matchers::Typed_Wrapper wraps the constraint") {
             }
 
             THEN ("the matcher describes the wrapped constraint") {
-                CHECK(matcher.describe() == R"("asdf")");
+                CHECK(matcher.describe() == R"(is "asdf")");
             }
         }
     }
@@ -69,7 +69,7 @@ SCENARIO ("matchers::Typed_Wrapper wraps the constraint") {
             }
 
             THEN ("the matcher describes the underlying matcher") {
-                CHECK(matcher.describe() == "!= 7");
+                CHECK(matcher.describe() == "is != 7");
             }
         }
     }

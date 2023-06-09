@@ -77,7 +77,7 @@ inline constexpr auto describe = [] (auto const& constraint) -> std::string {
     if constexpr (is_matcher_v<Constraint>) {
         return constraint.describe();
     } else {
-        return ::Catch::Detail::stringify(constraint);
+        return "is " + ::Catch::Detail::stringify(constraint);
     }
 };
 }  // namespace c2mm::matchers::utils

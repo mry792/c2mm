@@ -10,7 +10,7 @@ TEST_CASE ("class c2mm::matchers::Comparison_Matcher - less_than(int)") {
     auto const matcher = c2mm::matchers::less_or_equal_to(7);
 
     SECTION (".describe()") {
-        CHECK(matcher.describe() == "<= 7");
+        CHECK(matcher.describe() == "is <= 7");
     }
 
     SECTION (".match(int)") {

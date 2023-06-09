@@ -73,7 +73,7 @@ class Comparison_Matcher final : public Catch::Matchers::MatcherGenericBase {
 template <typename T>
 Comparison_Matcher<std::remove_cvref_t<T>, std::equal_to<>>
 equal_to (T&& expected) {
-    return {std::forward<T>(expected), "== "};
+    return {std::forward<T>(expected), "is == "};
 }
 
 /**
@@ -85,7 +85,7 @@ equal_to (T&& expected) {
 template <typename T>
 Comparison_Matcher<std::remove_cvref_t<T>, std::not_equal_to<>>
 not_equal_to (T&& expected) {
-    return {std::forward<T>(expected), "!= "};
+    return {std::forward<T>(expected), "is != "};
 }
 
 /**
@@ -97,7 +97,7 @@ not_equal_to (T&& expected) {
 template <typename T>
 Comparison_Matcher<std::remove_cvref_t<T>, std::greater<>>
 greater_than (T&& expected) {
-    return {std::forward<T>(expected), "> "};
+    return {std::forward<T>(expected), "is > "};
 }
 
 /**
@@ -109,7 +109,7 @@ greater_than (T&& expected) {
 template <typename T>
 Comparison_Matcher<std::remove_cvref_t<T>, std::less<>>
 less_than (T&& expected) {
-    return {std::forward<T>(expected), "< "};
+    return {std::forward<T>(expected), "is < "};
 }
 
 /**
@@ -123,7 +123,7 @@ less_than (T&& expected) {
 template <typename T>
 Comparison_Matcher<std::remove_cvref_t<T>, std::greater_equal<>>
 greater_or_equal_to (T&& expected) {
-    return {std::forward<T>(expected), ">= "};
+    return {std::forward<T>(expected), "is >= "};
 }
 
 /**
@@ -135,7 +135,7 @@ greater_or_equal_to (T&& expected) {
 template <typename T>
 Comparison_Matcher<std::remove_cvref_t<T>, std::less_equal<>>
 less_or_equal_to (T&& expected) {
-    return {std::forward<T>(expected), "<= "};
+    return {std::forward<T>(expected), "is <= "};
 }
 }  // namespace c2mm::matchers
 
