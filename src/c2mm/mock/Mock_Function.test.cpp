@@ -73,7 +73,9 @@ SCENARIO ("Mock_Function fails when calls aren't matched.") {
 
                 THEN ("the failure is reported") {
                     mock_reporter.check_called(
-                        "No call whose arguments match."
+                        "No call where arguments:\n"
+                        "  0: is < 3\n"
+                        "  1: is < -2\n"
                     );
 
                     func_ptr.reset();

@@ -1,13 +1,15 @@
 #ifndef C2MOCK__MOCK__MOCK_FUNCTION_HPP_
 #define C2MOCK__MOCK__MOCK_FUNCTION_HPP_
 
-#include <utility>
+#include <sstream>
 #include <type_traits>
+#include <utility>
 
 #include <catch2/catch_test_macros.hpp>
 
 #include "c2mm/matchers/Tuple_Matcher.hpp"
 #include "c2mm/matchers/Typed_Wrapper.hpp"
+#include "c2mm/matchers/utils.hpp"
 #include "c2mm/mock/Call_Log.hpp"
 #include "c2mm/mock/Default_Action.hpp"
 #include "c2mm/mock/Expectation.hpp"
@@ -15,6 +17,7 @@
 #include "c2mm/mock/args.hpp"
 #include "c2mm/mock/reporters/Fail.hpp"
 #include "c2mm/mock/reporters/Fail_Check.hpp"
+#include "c2mm/mp/for_each.hpp"
 #include "c2mm/mp/utils.hpp"
 
 #define FWD(X) std::forward<decltype(X)>(X)
@@ -183,8 +186,21 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
         auto matcher = matchers::matches(bind_args(arg_constraints...));
 
         if (not calls_.consume_match(matcher)) {
-            // TODO(emery): Print out constraints.
-            reporter("No call whose arguments match.");
+            using c2mm::matchers::utils::describe;
+            using c2mm::mp::for_each;
+
+            std::ostringstream buffer{};
+            buffer << "No call where arguments:\n";
+            for_each(
+                matcher.constraints(),
+                [&buffer] (std::size_t idx, auto const& constraint) {
+                    buffer
+                        << "  " << idx << ": "
+                        << describe(constraint) << "\n";
+                }
+            );
+
+            reporter(buffer.str());
         }
     }
 
