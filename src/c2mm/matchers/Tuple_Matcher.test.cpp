@@ -17,5 +17,12 @@ TEST_CASE ("c2mm::matchers::Tuple_Matcher") {
         CHECK(not matcher.match(std::tuple{7, 3.5}));
     }
 
-    // TODO(emery): test ".describe()"
+    SECTION (".describe()") {
+        CHECK(
+            matcher.describe() ==
+            "items match:\n"
+            "  0: is 7\n"
+            "  1: is < 3.14159\n"
+        );
+    }
 }

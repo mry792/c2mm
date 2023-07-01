@@ -1,6 +1,7 @@
 #ifndef C2MM__MATCHERS__TUPLE_MATCHER_HPP_
 #define C2MM__MATCHERS__TUPLE_MATCHER_HPP_
 
+#include <sstream>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -9,6 +10,7 @@
 
 #include "c2mm/matchers/utils.hpp"
 #include "c2mm/mp/all.hpp"
+#include "c2mm/mp/for_each.hpp"
 #include "c2mm/mp/zip_with.hpp"
 
 namespace c2mm::matchers {
@@ -66,8 +68,20 @@ class Tuple_Matcher final : Catch::Matchers::MatcherGenericBase {
      * @return A string describing this matcher object.
      */
     std::string describe () const override {
-        // TODO
-        return "";
+        using mp::for_each;
+
+        std::ostringstream buffer{};
+        buffer << "items match:\n";
+        for_each(
+            constraints_,
+            [&buffer] (std::size_t idx, auto const& constraint) {
+                buffer
+                    << "  " << idx << ": "
+                    << utils::describe(constraint) << "\n";
+            }
+        );
+
+        return buffer.str();
     }
 
   private:
