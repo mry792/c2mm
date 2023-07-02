@@ -7,6 +7,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include "c2mm/matchers/Any.hpp"
 #include "c2mm/matchers/Comparison_Matcher.hpp"
 #include "c2mm/mock/reporters/Mock.hpp"
 
@@ -89,6 +90,48 @@ SCENARIO ("Mock_Function fails when calls aren't matched.") {
                         "  0: 3.3\n"
                         "  1: -2\n"
                     );
+                }
+            }
+        }
+    }
+}
+
+SCENARIO ("Mock_Function - Unmatched calls invoke the default action.") {
+    using c2mm::matchers::_;
+
+    GIVEN ("a Mock_Function") {
+        using c2mm::mock::Mock_Function;
+        using Func = Mock_Function<void(double, int), reporters::Mock_Ref>;
+
+        reporters::Mock call_log_reporter{};
+        Mock_Function<void(double, int)> mock_default_action{};
+
+        Func test_func{call_log_reporter};
+        test_func.default_action(std::ref(mock_default_action));
+
+        WHEN ("the mock function is invoked") {
+            test_func(-1.3, -2);
+            test_func(86.9, 18);
+            // TODO: "allow call"
+            call_log_reporter.on_call(_);
+            call_log_reporter.on_call(_);
+
+            THEN ("the default action was invoked") {
+                mock_default_action.check_called(86.9, 18);
+                mock_default_action.check_called(-1.3, -2);
+            }
+        }
+
+        AND_GIVEN ("an expectation") {
+            test_func.on_call(1.1, 2);
+
+            WHEN ("the mock function is invoked") {
+                test_func(3.3, 4);
+                test_func(1.1, 2);
+                call_log_reporter.on_call(_);
+
+                THEN ("the default action was invoked only for the unmatched calls") {
+                    mock_default_action.check_called(3.3, 4);
                 }
             }
         }

@@ -53,6 +53,7 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
     using Signature = T_Return(T_Parameters...);
     using Call_Log_Type = Call_Log<Captured_Args<T_Parameters...>>;
     using Expectation_Type = Expectation<Signature>;
+    using Action = typename Expectation_Type::Action;
 
     /**
      * Construct an instance with a given reporter.
@@ -76,6 +77,17 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
     typename Call_Log_Type::Call_List const& calls () const {
         return calls_.calls();
     }
+
+    /**
+     * Mutator for the default action of this @c Mock_Function object.
+     *
+     * This will be invoked if the mock function is called and no expectation
+     * can consume the call. The default action must be invocable with const
+     * lvalue references to the call arguments.
+     *
+     * @param[in] value The new default action.
+     */
+    void default_action (Action value) { default_action_ = std::move(value); }
 
     /**
      * Create an @c Expectation for calls that match @p arg_constraints.
@@ -135,8 +147,8 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
      * "Call" the mock function.
      *
      * If there is an expectation that can consume these arguments, delegate to
-     * the first expectation that matches. Otherwise, the call will be logged
-     * to be checked later. If not consumed by a @c check_called or a @c
+     * the first such expectation. Otherwise, log the call to be checked later.
+     * If the logged call is not consumed by a @c check_called or a @c
      * require_called before the @c Mock_Function object is destroyed, the
      * current Catch2 test will fail.
      *
@@ -155,7 +167,7 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
         }
 
         calls_.log(FWD(args)...);
-        return Default_Action<T_Return>{}();
+        return std::apply(default_action_, *calls().back());
     }
 
     /**
@@ -232,6 +244,7 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
 
   private:
     T_Log_Reporter log_reporter_;
+    Action default_action_ = Default_Action<T_Return>{};
     Call_Log_Type calls_;
     std::vector<Expectation_Type> expectations_;
 };
