@@ -32,7 +32,7 @@ class Expectation<T_Return(T_Parameters...)> {
 
   public:
     using Args_Tuple = Bound_Args<T_Parameters...>;
-    using Matcher = Catch::Matchers::MatcherBase<Args_Tuple>;
+    using Args_Matcher = Catch::Matchers::MatcherBase<Args_Tuple>;
     using Action = std::function<T_Return(T_Parameters...)>;
 
     /**
@@ -41,14 +41,14 @@ class Expectation<T_Return(T_Parameters...)> {
      * @param[in] matcher Tuple matcher indicating whether this expectation can
      *     accept a call based on it's arguments.
      */
-    Expectation (std::unique_ptr<Matcher> matcher)
+    Expectation (std::unique_ptr<Args_Matcher> matcher)
           : matcher_{std::move(matcher)} {}
 
     /**
      * Read-only accessor to the internal matcher.
      * @return Constant reference to the @c matcher field.
      */
-    Matcher const& matcher () const {
+    Args_Matcher const& matcher () const {
         return *matcher_;
     }
 
@@ -87,7 +87,7 @@ class Expectation<T_Return(T_Parameters...)> {
     }
 
   private:
-    std::unique_ptr<Matcher> matcher_;
+    std::unique_ptr<Args_Matcher> matcher_;
     Action action_ = Default_Action<T_Return>{};
 
     std::size_t call_count_ = 0;
