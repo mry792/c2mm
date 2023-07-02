@@ -14,7 +14,7 @@ namespace c2mm::mock {
  * pointer or @c std::reference_wrapper.
  */
 template <typename... T_Args>
-using Captured_Args = std::tuple<std::remove_cvref_t<T_Args>...>;
+using Captured_Args = std::tuple<std::decay_t<T_Args>...>;
 
 /**
  * Capture @p args by value.
