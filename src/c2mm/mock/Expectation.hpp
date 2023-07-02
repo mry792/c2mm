@@ -27,8 +27,7 @@ class Expectation;
  */
 template <typename T_Return, typename... T_Parameters>
 class Expectation<T_Return(T_Parameters...)> {
-    template <typename T_Expectation>
-    friend class Expectation_Handle;
+    friend class Expectation_Handle<Expectation>;
 
   public:
     using Args_Tuple = Bound_Args<T_Parameters...>;
