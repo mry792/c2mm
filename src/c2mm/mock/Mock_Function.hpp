@@ -242,6 +242,51 @@ class Mock_Function<T_Return(T_Parameters...), T_Log_Reporter> {
         validate_called(reporters::Fail{}, arg_constraints...);
     }
 
+    // /**
+    //  * Check for a past call whose arguments match @p arg_constraints.
+    //  *
+    //  * Checks each unconsumed logged call in turn until one matches the given @c
+    //  * arg_constraints. For each constraint that is a matcher, the comparison
+    //  * is equivalent to `constraint.match(value)`. Otherwise, the comparison is
+    //  * `operator ==`. All comparisons must resolve to @c true for a call to be
+    //  * matched.
+    //  *
+    //  * Once a call is matched, it is consumed and cannot match another set of
+    //  * constraints in a future validation.
+    //  *
+    //  * This is a lower level function that is typically not used by users of
+    //  * this library. Prefer one of `check_called` or `require_called` bellow.
+    //  *
+    //  * @param[out] reporter Callable used to report a failure to find a logged
+    //  *     call that matches the constraints.
+    //  * @param[in] arg_constraints Constraints to check against arguments of
+    //  *     logged calls.
+    //  */
+    // template <typename T_Reporter>
+    // auto validate_expectations (T_Reporter reporter) {
+    //     for (auto& expect : expectations_) {
+    //         // ?????
+    //     }
+
+    //     if (not calls_.consume_match(matcher)) {
+    //         using c2mm::matchers::utils::describe;
+    //         using c2mm::mp::for_each;
+
+    //         std::ostringstream buffer{};
+    //         buffer << "No call where arguments:\n";
+    //         for_each(
+    //             matcher.constraints(),
+    //             [&buffer] (std::size_t idx, auto const& constraint) {
+    //                 buffer
+    //                     << "  " << idx << ": "
+    //                     << describe(constraint) << "\n";
+    //             }
+    //         );
+
+    //         reporter(buffer.str());
+    //     }
+    // }
+
   private:
     T_Log_Reporter log_reporter_;
     Action default_action_ = Default_Action<T_Return>{};

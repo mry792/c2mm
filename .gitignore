@@ -1,0 +1,15 @@
+# CMake
+CMakeUserPresets.json
+
+# Conan
+build*
+conan.lock
+conanbuildinfo.txt
+conaninfo.txt
+graph_info.json
+
+# Sublime Text
+*.sublime-workspace
+
+# misc
+install*

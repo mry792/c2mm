@@ -24,6 +24,9 @@ class Expectation;
 /**
  * Wraps and controls access to a particular action a mock function can execute
  * in response to a call.
+ *
+ * @tparam T_Return The return type of the action.
+ * @tparam T_Parameters... The parameters of the action.
  */
 template <typename T_Return, typename... T_Parameters>
 class Expectation<T_Return(T_Parameters...)> {
