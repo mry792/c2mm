@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         filter: tree:0
         fetch-depth: 0
@@ -40,8 +40,22 @@ jobs:
         conan profile show default
         conan profile update settings.compiler.libcxx=libstdc++11 default
 
-    - name: DEBUG
-      run: git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+    # - name: DEBUG
+    #   run: git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+    - name: Checkout Brokkr
+      uses: actions/checkout@v4
+      with:
+        repository: mry792/brokkr
+        ref: v0.2.2
+        path: extern/brokkr
+        filter: tree:0
+        fetch-depth: 0
+
+    - name: Build Brokkr
+      run: |
+        pushd extern/brokkr
+        conan create .
+        popd
 
     - name: Create Package
       run: conan create .
