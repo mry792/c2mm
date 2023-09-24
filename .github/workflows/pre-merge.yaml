@@ -25,6 +25,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        filter: tree:0
+        fetch-depth: 0
+
     - name: Get Conan
       uses: turtlebrowser/get-conan@v1.2
       with:
