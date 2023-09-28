@@ -55,15 +55,17 @@ jobs:
       uses: robinraju/release-downloader@v1.8
       with:
         repository: mry792/brokkr
-        tag: v0.2.2
+        tag: v0.2.3
+        out-file-path: extern/brokkr
         tarBall: true
         extract: true
 
     - name: Build Brokkr
       run: |
         ls -al
-        pushd extern/brokkr
-        conan create .
+        pushd extern/brokkr/mry792-brokkr-*
+        ls -al
+        conan create . brokkr/0.2.3@egoss/stable
         popd
 
     - name: Create Package
