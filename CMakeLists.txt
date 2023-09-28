@@ -4,7 +4,7 @@ project(c2mm LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(brokkr REQUIRED)
-brokkr_project_version_from_git()
+brokkr_deduce_project_version()
 
 brokkr_library(
     ${PROJECT_NAME}

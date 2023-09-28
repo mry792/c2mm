@@ -30,7 +30,7 @@ class C2MMRecipe (ConanFile):
         self.version = tag[1:]
 
     requires = 'catch2/3.1.0'
-    tool_requires = 'brokkr/0.2.2@egoss/stable'
+    tool_requires = 'brokkr/0.2.3@egoss/stable'
 
     def export (self):
         git = Git(self, self.recipe_folder)
