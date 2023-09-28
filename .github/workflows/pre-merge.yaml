@@ -56,17 +56,16 @@ jobs:
       with:
         repository: mry792/brokkr
         tag: v0.2.3
-        out-file-path: extern/brokkr
+        out-file-path: extern-brokkr
         tarBall: true
         extract: true
 
     - name: Build Brokkr
       run: |
-        ls -al
-        pushd extern/brokkr/mry792-brokkr-*
-        ls -al
+        pushd extern-brokkr/mry792-brokkr-*
         conan create . brokkr/0.2.3@egoss/stable
         popd
+        rm -r extern-brokkr
 
     - name: Create Package
       run: conan create .
