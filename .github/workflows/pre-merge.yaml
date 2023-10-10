@@ -69,6 +69,11 @@ jobs:
 
     - name: Build Brokkr
       run: |
+        pwd
+        env
+        ls -al /
+        ls -al /github
+        ls -al /github/home
         pushd extern-brokkr/mry792-brokkr-*
         conan create . brokkr/0.2.3@egoss/stable
         popd
