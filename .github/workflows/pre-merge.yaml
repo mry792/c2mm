@@ -31,10 +31,13 @@ jobs:
       image: ghcr.io/mry792/cpp-build:latest
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        filter: tree:0
-        fetch-depth: 0
+      - shell: bash
+        run: 'echo HOME=/root | sudo tee -a $GITHUB_ENV'
+
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
 
     # - name: Get Conan
     #   uses: turtlebrowser/get-conan@v1.2
@@ -58,29 +61,29 @@ jobs:
     #     filter: tree:0
     #     fetch-depth: 0
 
-    - name: Get Brokkr
-      uses: robinraju/release-downloader@v1.8
-      with:
-        repository: mry792/brokkr
-        tag: v0.2.3
-        out-file-path: extern-brokkr
-        tarBall: true
-        extract: true
+      - name: Get Brokkr
+        uses: robinraju/release-downloader@v1.8
+        with:
+          repository: mry792/brokkr
+          tag: v0.2.3
+          out-file-path: extern-brokkr
+          tarBall: true
+          extract: true
 
-    - name: Build Brokkr
-      run: |
-        pwd
-        env
-        ls -al /
-        ls -al /github
-        ls -al /github/home
-        pushd extern-brokkr/mry792-brokkr-*
-        conan create . brokkr/0.2.3@egoss/stable
-        popd
-        rm -r extern-brokkr
+      - name: Build Brokkr
+        run: |
+          pwd
+          env
+          ls -al /
+          ls -al /github
+          ls -al /github/home
+          pushd extern-brokkr/mry792-brokkr-*
+          conan create . brokkr/0.2.3@egoss/stable
+          popd
+          rm -r extern-brokkr
 
-    - name: Create Package
-      run: conan create .
+      - name: Create Package
+        run: conan create .
 
     # - name: Configure CMake
     #   # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
