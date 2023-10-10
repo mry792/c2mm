@@ -25,7 +25,7 @@ jobs:
 
     defaults:
       run:
-        shell: bash
+        shell: bash --login -eo pipefail {0}
 
     container:
       image: ghcr.io/mry792/cpp-build:latest
