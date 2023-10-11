@@ -79,13 +79,9 @@ jobs:
 
       - name: Create Package
         run: |
-          echo "ls -al"
-          ls -al
-          echo "ls -al .git"
-          ls -al .git
-          echo "USER = $(id)"
+          env
           git config --global --add safe.directory "$(pwd)"
-          conan create .
+          conan create . ${{ github.actor }}/ci --build missing
 
     # - name: Configure CMake
     #   # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
