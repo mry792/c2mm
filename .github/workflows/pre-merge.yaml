@@ -83,7 +83,8 @@ jobs:
           ls -al
           echo "ls -al .git"
           ls -al .git
-          echo "USER = |${USER}|"
+          echo "USER = $(id)"
+          git config --global --add safe.directory "$(pwd)"
           conan create .
 
     # - name: Configure CMake
