@@ -34,11 +34,6 @@ jobs:
       - shell: bash
         run: 'echo HOME=/root | sudo tee -a $GITHUB_ENV'
 
-      - uses: actions/checkout@v4
-        with:
-          filter: tree:0
-          fetch-depth: 0
-
     # - name: Get Conan
     #   uses: turtlebrowser/get-conan@v1.2
     #   with:
@@ -81,6 +76,11 @@ jobs:
           conan create . brokkr/0.2.3@egoss/stable
           popd
           rm -r extern-brokkr
+
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
 
       - name: Create Package
         run: conan create .
