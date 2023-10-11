@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - shell: bash
-        run: 'echo HOME=/root | sudo tee -a $GITHUB_ENV'
+        run: echo HOME=/root | sudo tee --append ${GITHUB_ENV}
 
     # - name: Get Conan
     #   uses: turtlebrowser/get-conan@v1.2
@@ -67,11 +67,6 @@ jobs:
 
       - name: Build Brokkr
         run: |
-          pwd
-          env
-          ls -al /
-          ls -al /github
-          ls -al /github/home
           pushd extern-brokkr/mry792-brokkr-*
           conan create . brokkr/0.2.3@egoss/stable
           popd
@@ -83,7 +78,13 @@ jobs:
           fetch-depth: 0
 
       - name: Create Package
-        run: conan create .
+        run: |
+          echo "ls -al"
+          ls -al
+          echo "ls -al .git"
+          ls -al .git
+          echo "USER = |${USER}|"
+          conan create .
 
     # - name: Configure CMake
     #   # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
