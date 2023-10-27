@@ -1,0 +1,13 @@
+# Generated as part of the build process.
+CMakeUserPresets.json
+conan.lock
+conanbuildinfo.txt
+conaninfo.txt
+graph_info.json
+
+# Local build and install directories.
+build
+install*
+
+# Editor local files.
+*.sublime-workspace
