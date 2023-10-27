@@ -68,7 +68,7 @@ jobs:
       - name: Build Brokkr
         run: |
           pushd extern-brokkr/mry792-brokkr-*
-          conan create . brokkr/0.2.3@egoss/stable
+          conan create . --name brokkr --version 0.2.3 --user egoss --channel stable
           popd
           rm -r extern-brokkr
 
@@ -81,7 +81,7 @@ jobs:
         run: |
           env
           git config --global --add safe.directory "$(pwd)"
-          conan create . ${{ github.actor }}/ci --build missing
+          conan create . --user ${{ github.actor }} --channel ci --build missing
 
     # - name: Configure CMake
     #   # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
